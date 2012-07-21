@@ -8,6 +8,7 @@
 String toSend = "";         // a string to hold incoming data
 int numKeys=1;
 int startKey=2;
+int pinState;
 
 void setup() {
   // initialize serial:
@@ -16,6 +17,7 @@ void setup() {
   int currentKey= startKey;
   pinMode(startKey, INPUT);
   pinMode(startKey+1, INPUT);
+  pinState = HIGH;
   
   /*
   for(int i =0; i<numKeys;i++){
@@ -30,9 +32,15 @@ void setup() {
 
 void loop() {
   digitalWrite(3, HIGH);
-  if(digitalRead(2)==LOW){
-   Serial.println("1T"); 
+  if(digitalRead(2)==LOW &&  pinState == HIGH){
+   Serial.print(2); 
+   pinState = LOW;
   }
+  else if (digitalRead(2)==HIGH && pinState == LOW){
+   pinState = HIGH;
+   Serial.print(0);
+  }
+  
   toSend= "";
   /*
   for(int i = 0; i<numKeys; i++){
