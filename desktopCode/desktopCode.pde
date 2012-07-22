@@ -11,15 +11,15 @@ Minim minim;
 AudioOutput out; 
 SineWave sine; 
 SineWave nullWave; 
-float MAXAMP = .6;  
+float MAXAMP = .5;  
 float amp  = MAXAMP; 
-// C, D, E, F, G from Kevin O'Hara via openprocessing
-float[] notesHz = {32.70, 36.71, 41.20, 43.25, 49.00};
+// GFEDCfrom Kevin O'Hara via openprocessing
+float[] notesHz = {49.00, 43.25, 41.20, 36.71, 32.70};
 boolean dirty = false;
 
 Serial myPort;  // Create object from Serial class
 int val;      // Data received from the serial port
-int numKeys=2;
+int numKeys=5;
 int[] keyStates;
 final int KEYUP = 48;
 final int KEYDOWN = 49;

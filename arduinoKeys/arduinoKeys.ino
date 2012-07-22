@@ -6,9 +6,9 @@
  */
 
 String toSend = "";         // a string to hold incoming data
-int numKeys=2;
+int numKeys=5;
 int startKey=2;
-int pinStates[2];
+int pinStates[5];
 
 void setup() {
   // initialize serial:
