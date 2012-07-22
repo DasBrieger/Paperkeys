@@ -33,6 +33,8 @@ final int KEYBOARD = 1;
 final int ORGAN = 2;
 String[] modes = {"Synthesizer", "Keyboard", "Organ"};
 int currentMode;
+boolean displayWave = true;
+
 
 PImage backgroundImage;
 PFont helv;
@@ -64,12 +66,19 @@ void setup()
 
 void draw()
 {
+  if(displayWave){
+     frameRate(50); 
+  }
+  else{
+     frameRate(60); 
+  }
+  
   while ( myPort.available () > 1) {
-    frameRate(60);
     dirty=true;  // If data is available,
     int curKey = (int)myPort.read() - 48; 
     keyStates[curKey]=myPort.read();
     println("Key "+curKey+" now "+keyStates[curKey]);
+    //println("Framerate: "+frameRate);
   }
 
   if (dirty) {
@@ -95,6 +104,10 @@ void draw()
   textFont(helvB, 25);
   textAlign(RIGHT);
   text("Current Mode: "+modes[currentMode], width-20, height-20);
+  
+  if(displayWave){
+   drawWave(); 
+  }
 }
 
 void constructSine() 
@@ -157,6 +170,19 @@ void keyPressed() {
     currentMode++;
     currentMode= currentMode%3;
   }
+  else if(key == 'w'){
+   displayWave = !displayWave; 
+  }
+}
+
+void drawWave(){
+  fill(66);
+   for(int i = 0; i < out.bufferSize() - 1; i++) 
+  { 
+    float x1 = map(i, 0, out.bufferSize(), width/4, width*3/4); 
+    float x2 = map(i+1, 0, out.bufferSize(), width/4, width*3/4); 
+    line(x1, 600 + out.left.get(i)*50, x2, 600 + out.left.get(i+1)*50); 
+  }  
 }
 
 void drawKeys(){
