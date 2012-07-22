@@ -179,14 +179,58 @@ void keyPressed() {
   if (key == ' ') {
     currentMode++;
     currentMode= currentMode%3;
+    dirty=true;
   }
   else if (key == 'w') {
     displayWave = !displayWave;
   }
+  else if(key == 'a'){
+    keyStates[4] = KEYDOWN;
+    dirty=true;
+  }
+    else if(key == 's'){
+    keyStates[3] = KEYDOWN;
+    dirty=true;
+  }
+    else if(key == 'd'){
+    keyStates[2] = KEYDOWN;
+    dirty=true;
+  }
+    else if(key == 'f'){
+    keyStates[1] = KEYDOWN;
+    dirty=true;
+  }
+    else if(key == 'g'){
+    keyStates[0] = KEYDOWN;
+    dirty=true;
+  }
 }
 
+void keyReleased(){
+ if(key == 'a'){
+  keyStates[4] = KEYUP;
+  dirty=true;
+ } 
+ else if(key == 's'){
+  keyStates[3] = KEYUP;
+  dirty=true;
+ } 
+ else if(key == 'd'){
+  keyStates[2] = KEYUP;
+  dirty=true;
+ } 
+ else if(key == 'f'){
+  keyStates[1] = KEYUP;
+  dirty=true;
+ } 
+ else if(key == 'g'){
+  keyStates[0] = KEYUP;
+  dirty=true;
+ } 
+}
 void drawWave() {
   fill(66);
+  //using kevin o'hora's algorithm
   for (int i = 0; i < out.bufferSize() - 1; i++) 
   { 
     float x1 = map(i, 0, out.bufferSize(), width/4, width*3/4); 
