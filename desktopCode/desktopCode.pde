@@ -31,12 +31,18 @@ final int KEYDOWN = 49;
 final int MONOTONIC = 0;
 final int KEYBOARD = 1;
 final int ORGAN = 2;
-String[] modes = {"Synthesizer", "Keyboard", "Organ"};
+String[] modes = {
+  "Synthesizer", "Keyboard", "Organ"
+};
 int currentMode;
 boolean displayWave = true;
 
 
 PImage backgroundImage;
+PImage sineImage;
+PImage chordImage;
+PImage organImage;
+PImage[] modeImages = new PImage[3]; 
 PFont helv;
 PFont helvB;
 PFont paper;
@@ -48,7 +54,10 @@ void setup()
   helvB = loadFont("HelveticaBold100.vlw"); 
   paper = loadFont("StrokeDimension100.vlw"); 
   backgroundImage = loadImage("background.jpg");
-  currentMode = MONOTONIC;
+  modeImages[0] = loadImage("sine.png");
+  modeImages[1] = loadImage("chord.png");
+  modeImages[2] = loadImage("organ.png");
+
   keyStates= new int[numKeys];
   for (int i = 0; i<numKeys; i++) {
     keyStates[i]= KEYUP;
@@ -66,13 +75,13 @@ void setup()
 
 void draw()
 {
-  if(displayWave){
-     frameRate(50); 
+  if (displayWave) {
+    frameRate(50);
   }
-  else{
-     frameRate(60); 
+  else {
+    frameRate(60);
   }
-  
+
   while ( myPort.available () > 1) {
     dirty=true;  // If data is available,
     int curKey = (int)myPort.read() - 48; 
@@ -87,8 +96,8 @@ void draw()
     dirty = false;
   }
   background(255);
-  image(backgroundImage, 0,0);
-  
+  image(backgroundImage, 0, 0);
+
   fill(66);
   textFont(paper, 150);
   textAlign(CENTER);
@@ -99,14 +108,15 @@ void draw()
   text("by John Brieger", width/2+290, 190);
   textAlign(CENTER);
   drawKeys();
-  
-  fill(66,66,66,180);
-  textFont(helvB, 25);
+
+  fill(66, 66, 66, 180);
+  textFont(helv, 25);
   textAlign(RIGHT);
+  image(modeImages[currentMode], width-370 + 20*currentMode, height-40);
   text("Current Mode: "+modes[currentMode], width-20, height-20);
-  
-  if(displayWave){
-   drawWave(); 
+
+  if (displayWave) {
+    drawWave();
   }
 }
 
@@ -170,39 +180,39 @@ void keyPressed() {
     currentMode++;
     currentMode= currentMode%3;
   }
-  else if(key == 'w'){
-   displayWave = !displayWave; 
+  else if (key == 'w') {
+    displayWave = !displayWave;
   }
 }
 
-void drawWave(){
+void drawWave() {
   fill(66);
-   for(int i = 0; i < out.bufferSize() - 1; i++) 
+  for (int i = 0; i < out.bufferSize() - 1; i++) 
   { 
     float x1 = map(i, 0, out.bufferSize(), width/4, width*3/4); 
     float x2 = map(i+1, 0, out.bufferSize(), width/4, width*3/4); 
-    line(x1, 600 + out.left.get(i)*50, x2, 600 + out.left.get(i+1)*50); 
-  }  
+    line(x1, 600 + out.left.get(i)*50, x2, 600 + out.left.get(i+1)*50);
+  }
 }
 
-void drawKeys(){
- stroke(0);
+void drawKeys() {
+  stroke(0);
   for (int i = 0; i<numKeys; i++) {
     if (keyStates[numKeys-1-i]== KEYUP) { 
-      fill(255,255,255,180);
+      fill(255, 255, 255, 180);
       rect(width/4+i*width/10, height/3+50, width/10, height/2-100);
-      fill(66,66,66,180);
+      fill(66, 66, 66, 180);
       textFont(helvB, 50);
       text(noteNames[i], width/4+i*width/10+ width/20, height/3+ height/2-60);
     } 
     else {
-      fill(66,66,66,180);
+      fill(66, 66, 66, 180);
       rect(width/4+i*width/10, height/3+50, width/10, height/2-100);
-      fill(255,255,255,180);
+      fill(255, 255, 255, 180);
       textFont(helvB, 50);
       text(noteNames[i], width/4+i*width/10+ width/20, height/3+ height/2-60);
     }
-  } 
+  }
 }
 
 void stop() 
