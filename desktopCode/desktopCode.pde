@@ -11,7 +11,7 @@ Minim minim;
 AudioOutput out; 
 SineWave sine; 
 SineWave nullWave; 
-float MAXAMP = .5;  
+float MAXAMP = .4;  
 float amp  = MAXAMP; 
 // GFEDCfrom Kevin O'Hara via openprocessing
 float[] notesHz = {49.00, 43.25, 41.20, 36.71, 32.70};
@@ -23,9 +23,14 @@ int numKeys=5;
 int[] keyStates;
 final int KEYUP = 48;
 final int KEYDOWN = 49;
+
+final int MONOTONIC = 0;
+final int KEYBOARD = 1;
+final int ORGAN = 2;
+int currentMode;
 void setup() 
 {
-  
+  currentMode = MONOTONIC;
   keyStates= new int[numKeys];
   for(int i = 0; i<numKeys; i++){
      keyStates[i]= KEYUP; 
@@ -43,8 +48,8 @@ void setup()
 
 void draw()
 {
-  frameRate(10);
   while ( myPort.available() > 1) {
+    frameRate(60);
     dirty=true;  // If data is available,
     int curKey = (int)myPort.read() - 48; 
     keyStates[curKey]=myPort.read();
@@ -73,13 +78,53 @@ void constructSine()
   { 
     if(keyStates[i]==KEYDOWN) 
     { 
+      
+      //electronic organ sound
+      if(currentMode == ORGAN){
       sine = new SineWave(32*notesHz[i], amp, out.sampleRate()); 
       sine.portamento(40); 
       out.addSignal(sine); 
+      sine = new SineWave(2*32*notesHz[i], amp/8, out.sampleRate()); 
+      sine.portamento(200); 
+      out.addSignal(sine);
+      sine = new SineWave(4*32*notesHz[i], amp/8, out.sampleRate()); 
+      sine.portamento(200); 
+      out.addSignal(sine);
+      sine = new SineWave(16*notesHz[i], amp/8, out.sampleRate()); 
+      sine.portamento(200); 
+      out.addSignal(sine);
+        sine = new SineWave(8*notesHz[i], amp/8, out.sampleRate()); 
+      sine.portamento(200); 
+      out.addSignal(sine);
+      }
+      
+      else if(currentMode == KEYBOARD){
+        //simple 5th chord to do standard electronic keyboard sound   
+      sine = new SineWave(32*notesHz[i], amp/3, out.sampleRate()); 
+      sine.portamento(40); 
+      out.addSignal(sine); 
+      sine = new SineWave(2*32*notesHz[i], amp/3, out.sampleRate()); 
+      sine.portamento(200); 
+      out.addSignal(sine);
+      sine = new SineWave(16*notesHz[i], amp/3, out.sampleRate()); 
+      sine.portamento(200); 
+      out.addSignal(sine);
+      }
+      
+      else if(currentMode == MONOTONIC){
+         sine = new SineWave(32*notesHz[i], amp, out.sampleRate()); 
+      sine.portamento(40); 
+      out.addSignal(sine); 
+      }
+      
     } 
   }  
 } 
 
+void keyReleased(){
+ currentMode++;
+currentMode= currentMode%3;
+}
 
 void stop() 
 { 
