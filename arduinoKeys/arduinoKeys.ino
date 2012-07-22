@@ -8,7 +8,7 @@
 String toSend = "";         // a string to hold incoming data
 int numKeys=1;
 int startKey=2;
-int pinState;
+int[] pinStates;
 
 void setup() {
   // initialize serial:
@@ -17,28 +17,30 @@ void setup() {
   int currentKey= startKey;
   pinMode(startKey, INPUT);
   pinMode(startKey+1, INPUT);
-  pinState = HIGH;
-  
-  /*
-  for(int i =0; i<numKeys;i++){
-    
-    pinMode(2*i+startKey, INPUT);
+  pinStates = new int[numkeys];
+  for(int i = 0; i<numKeys; i++){
+     pinMode(2*i+startKey, INPUT);
     //pullupResistor
     pinMode(2*i+1+startKey, INPUT);
     digitalWrite(2*i+1+startKey, HIGH);
+    pinStates[i] = HIGH;
   }
-  */
+ 
 }
 
 void loop() {
-  digitalWrite(3, HIGH);
-  if(digitalRead(2)==LOW &&  pinState == HIGH){
-   Serial.print(2); 
-   pinState = LOW;
+  for(int i =0; i<numKeys; i++){
+   int cur = 2*i+startKey;
+  if(digitalRead(cur)==LOW &&  pinStates[i] == HIGH){
+   Serial.print(i); 
+   Serial.print(1); 
+   pinStates[i] = LOW;
   }
-  else if (digitalRead(2)==HIGH && pinState == LOW){
-   pinState = HIGH;
+  else if (digitalRead(cur)==HIGH && pinStates[i] == LOW){
+   pinStates[i] = HIGH;
+   Serial.print(i); 
    Serial.print(0);
+  }
   }
   
   toSend= "";
