@@ -6,9 +6,9 @@
  */
 
 String toSend = "";         // a string to hold incoming data
-int numKeys=1;
+int numKeys=2;
 int startKey=2;
-int[] pinStates;
+int pinStates[2];
 
 void setup() {
   // initialize serial:
@@ -17,7 +17,6 @@ void setup() {
   int currentKey= startKey;
   pinMode(startKey, INPUT);
   pinMode(startKey+1, INPUT);
-  pinStates = new int[numkeys];
   for(int i = 0; i<numKeys; i++){
      pinMode(2*i+startKey, INPUT);
     //pullupResistor
