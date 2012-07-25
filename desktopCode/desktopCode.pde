@@ -182,7 +182,7 @@ void keyPressed() {
     dirty=true;
   }
   else if (key == 'w') {
-    displayWave = !displayWave;
+    displayWave = !displayWave;  
   }
   else if(key == 'a'){
     keyStates[4] = KEYDOWN;
